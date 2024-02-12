@@ -1,5 +1,5 @@
-from pr1.coder import coder
-from pr1.decoder import decoder
+from pr1.recoder1 import coder
+from pr1.decoder1 import decoder
 
 def main():
     while True:
@@ -23,5 +23,5 @@ def main():
             break
         else:
             print("Некорректный ввод. Попробуйте снова.")
-
-main()
+if __name__ == 'main':
+    main()
