@@ -5,5 +5,10 @@ def  coder(text):
     # возведение в верхний регистр всех символов в строке
     for char in text.upper():
         if char in morse_code:
+            encoded += morse_code[char]
+        return encoded
+    encoded = ''
+    for char in text.upper():
+        if char in morse_code:
             encoded += morse_code[char] + " "
     return encoded
