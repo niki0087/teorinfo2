@@ -1,8 +1,16 @@
 from pr1.morse import morse_code
-# функция декодирования строки на Азбуке Морзе в строку на Unicode
+
 def decoder(morsecode):
+    """
+    Декодирование строки на Азбуке Морзе в строку на Unicode.
+
+    Args:
+        morsecode (str): Строка на Азбуке Морзе.
+
+    Returns:
+        str: Раскодированная строка на Unicode.
+    """
     decoded = ''
-    # переделывает строку в типо массив через ковычки где ключи это символы юникод а значения - азбука морзе
     morsecode_list = morsecode.split(' ')
     for item in morsecode_list:
         for key, value in morse_code.items():
