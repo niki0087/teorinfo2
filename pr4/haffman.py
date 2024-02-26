@@ -1,3 +1,7 @@
+import json
+from datetime import datetime
+import os
+
 class Node:
     def __init__(self, left, right):
         self.left = left
@@ -28,8 +32,20 @@ class HuffmanTree:
         code = self.generate_codes(node.right, path + '1', code)
         return code
 
+def save_codes_to_json(codes):
+    timestamp = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
+    folder_name = f"{os.getcwd()}/{timestamp}"
+    os.makedirs(folder_name, exist_ok=True)
+
+    file_path = os.path.join(folder_name, "code.json")
+    
+    with open(file_path, 'w', encoding='utf-8') as json_file:
+        json.dump(codes, json_file, ensure_ascii=False, indent=2)    
+    
+
+
 if __name__ == "__main__":
-    file_name = input("Введите имя файла: ")
+    file_name = input("Введите имя файла с текстом: ")
 
     try:
         with open(file_name, 'r', encoding='utf-8') as file:
@@ -41,4 +57,5 @@ if __name__ == "__main__":
         root_node = huffman_tree.build_tree()
         codes = huffman_tree.generate_codes(root_node)
 
-        print(codes)
+        save_codes_to_json(codes)
+        print(f"Код Хаффмана сохранен в json файле.")

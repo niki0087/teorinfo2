@@ -33,7 +33,7 @@ def walk(node, path=''):
     
 walk(frequences[0][1])
 
-def code_to_json(codes):
-    
+
+
 
 print(code)
