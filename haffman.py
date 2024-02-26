@@ -1,3 +1,6 @@
+import json
+import datetime
+
 class Node:
 
     def __init__(self, left, right):
@@ -29,5 +32,8 @@ def walk(node, path=''):
     walk(node.right, path + '1')
     
 walk(frequences[0][1])
+
+def code_to_json(codes):
+    
 
 print(code)
