@@ -11,7 +11,7 @@ def decoder(morsecode):
         str: Раскодированная строка на Unicode.
     """
     decoded = ''
-    morsecode_list = morsecode.split(' ')
+    morsecode_list = morsecode.split("  ")
     for item in morsecode_list:
         for key, value in morse_code.items():
             if item == value:
