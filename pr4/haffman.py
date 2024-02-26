@@ -34,14 +34,14 @@ class HuffmanTree:
 
 def save_codes_to_json(codes):
     timestamp = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
-    folder_name = f"{os.getcwd()}/{timestamp}"
-    os.makedirs(folder_name, exist_ok=True)
+    target_folder = "/home/admin/teorinfo2/teorinfo2/pr4"  
+    folder_path = os.path.join(target_folder, timestamp)
+    os.makedirs(folder_path, exist_ok=True)
 
-    file_path = os.path.join(folder_name, "code.json")
+    file_path = os.path.join(folder_path, "code.json")
     
     with open(file_path, 'w', encoding='utf-8') as json_file:
-        json.dump(codes, json_file, ensure_ascii=False, indent=2)    
-    
+        json.dump(codes, json_file, ensure_ascii=False, indent=2) 
 
 
 if __name__ == "__main__":
