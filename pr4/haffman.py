@@ -1,19 +1,34 @@
+"""
+Module docstring here.
+"""
+
 import json
 from datetime import datetime
 import os
+import re
+import shutil
 
 class Node:
+    """
+    Class docstring here.
+    """
     def __init__(self, left, right):
         self.left = left
         self.right = right
 
 class HuffmanTree:
+    """
+    Class docstring here.
+    """
     def __init__(self, text):
         self.text = text
         self.letters = set(text)
         self.frequencies = [(text.count(letter), letter) for letter in self.letters]
 
     def build_tree(self):
+        """
+        Build Huffman tree.
+        """
         while len(self.frequencies) > 1:
             self.frequencies = sorted(self.frequencies, key=lambda x: x[0], reverse=True)
             first = self.frequencies.pop()
@@ -23,6 +38,9 @@ class HuffmanTree:
         return self.frequencies[0][1]
 
     def generate_codes(self, node, path='', code=None):
+        """
+        Generate Huffman codes.
+        """
         if code is None:
             code = {}
         if isinstance(node, str):
@@ -32,30 +50,32 @@ class HuffmanTree:
         code = self.generate_codes(node.right, path + '1', code)
         return code
 
+def delete_folders_by_pattern(base_folder, pattern):
+    """
+    Delete folders based on the provided pattern.
+    """
+    try:
+        for folder_name in os.listdir(base_folder):
+            folder_path = os.path.join(base_folder, folder_name)
+            if os.path.isdir(folder_path) and re.match(pattern, folder_name):
+                shutil.rmtree(folder_path)
+    except OSError as e:
+        print(f"An error occurred while deleting folders: {e}")
+
 def save_codes_to_json(codes):
+    """
+    Save Huffman codes to a JSON file.
+    """
     timestamp = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
-    target_folder = "/home/admin/teorinfo2/teorinfo2/pr4"  
+    target_folder = "/home/admin/teorinfo2/teorinfo2/pr4"
+    delete_folders_by_pattern(target_folder, r'\d{4}-\d{2}-\d{2}-\d{2}-\d{2}-\d{2}')
     folder_path = os.path.join(target_folder, timestamp)
     os.makedirs(folder_path, exist_ok=True)
 
     file_path = os.path.join(folder_path, "code.json")
-    
-    with open(file_path, 'w', encoding='utf-8') as json_file:
-        json.dump(codes, json_file, ensure_ascii=False, indent=2) 
-
-
-if __name__ == "__main__":
-    file_name = input("Введите имя файла с текстом: ")
 
     try:
-        with open(file_name, 'r', encoding='utf-8') as file:
-            text = file.read()
-    except FileNotFoundError:
-        print(f"Файл {file_name} не найден.")
-    else:
-        huffman_tree = HuffmanTree(text)
-        root_node = huffman_tree.build_tree()
-        codes = huffman_tree.generate_codes(root_node)
-
-        save_codes_to_json(codes)
-        print(f"Код Хаффмана сохранен в json файле.")
+        with open(file_path, 'w', encoding='utf-8') as json_file:
+            json.dump(codes, json_file, ensure_ascii=False, indent=2)
+    except OSError as e:
+        print(f"An error occurred while saving codes to json: {e}")
