@@ -13,6 +13,13 @@ class Node:
     Class docstring here.
     """
     def __init__(self, left, right):
+        """
+        Initialize a new instance of the Node class.
+
+        Parameters:
+        - left: The left child node.
+        - right: The right child node.
+        """
         self.left = left
         self.right = right
 
@@ -21,6 +28,12 @@ class HuffmanTree:
     Class docstring here.
     """
     def __init__(self, text):
+        """
+        Initialize a new instance of the HuffmanTree class.
+
+        Parameters:
+        - text: The input text for Huffman coding.
+        """
         self.text = text
         self.letters = set(text)
         self.frequencies = [(text.count(letter), letter) for letter in self.letters]
@@ -53,6 +66,10 @@ class HuffmanTree:
 def delete_folders_by_pattern(base_folder, pattern):
     """
     Delete folders based on the provided pattern.
+
+    Parameters:
+    - base_folder: The base folder where deletion will be performed.
+    - pattern: The regular expression pattern for matching folder names.
     """
     try:
         for folder_name in os.listdir(base_folder):
@@ -65,6 +82,9 @@ def delete_folders_by_pattern(base_folder, pattern):
 def save_codes_to_json(codes):
     """
     Save Huffman codes to a JSON file.
+
+    Parameters:
+    - codes: The Huffman codes to be saved.
     """
     timestamp = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
     target_folder = "/home/admin/teorinfo2/teorinfo2/pr4"
