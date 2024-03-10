@@ -79,12 +79,12 @@ def delete_folders_by_pattern(base_folder, pattern):
     except OSError as e:
         print(f"An error occurred while deleting folders: {e}")
 
-def save_codes_to_json(codes):
+def save_codes_to_json(data):
     """
-    Save Huffman codes to a JSON file.
+    Save Huffman codes and compressed text to a JSON file.
 
     Parameters:
-    - codes: The Huffman codes to be saved.
+    - data: The data to be saved, including Huffman codes and compressed text.
     """
     timestamp = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
     target_folder = "/home/admin/teorinfo2/teorinfo2/pr5"
@@ -96,6 +96,7 @@ def save_codes_to_json(codes):
 
     try:
         with open(file_path, 'w', encoding='utf-8') as json_file:
-            json.dump(codes, json_file, ensure_ascii=False, indent=2)
+            json.dump(data, json_file, ensure_ascii=False, indent=2)
     except OSError as e:
-        print(f"An error occurred while saving codes to json: {e}")
+        print(f"An error occurred while saving data to json: {e}")
+        
