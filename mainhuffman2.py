@@ -41,7 +41,7 @@ if __name__ == "__main__":
 
             # Сохранение кодов Хаффмана и сжатого текста в JSON файл
             save_data = {
-                "huffman_tree": huffman_codes,
+                #"huffman_tree": huffman_codes,
                 "compressed_text": compressed_text
             }
 

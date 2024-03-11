@@ -81,12 +81,13 @@ def delete_folders_by_pattern(base_folder, pattern):
 
 def compress_data(text, huff_codes):
     """
-    Parameters:
-    - text: Текст, который нужно сжать.
-    - huff_codes: Словарь с кодами Хаффмана для символов.
+
+    Args:
+        text (_type_): _description_
+        huff_codes (_type_): _description_
 
     Returns:
-    - compressed_data: Сжатый текст.
+        _type_: _description_
     """
     compressed_data = ""
     for char in text:
@@ -156,4 +157,3 @@ def create_text_file(decoded_data):
             file.write(decoded_data)
     except OSError as e:
         print(f"An error occurred while saving decoded text to file: {e}")
-
