@@ -160,14 +160,25 @@ def create_text_file(decoded_data):
         print(f"An error occurred while saving decoded text to file: {e}")
 
 def save_binary_data(source_data, file_path):
-    # Сохраняем данные в бинарный файл
+    """
+    Args:
+        source_data (_type_): _description_
+        file_path (_type_): _description_
+    """
     source_data = source_data + '0' * (8 - (len(source_data) % 8))
     source_data_byte = bytearray([int(source_data[i * 8:i * 8 + 8], 2) for i in range(int(len(source_data) / 8))])
     with open(file_path, 'wb') as file:
         file.write(source_data_byte)
 
 def load_binary_data(file_path):
-    # Загружаем данные из бинарного файла
+    """
+
+    Args:
+        file_path (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """
     with open(file_path, 'rb') as file:
         result_data_byte = file.read()
     result_data = ''.join(['{:0>8}'.format(str(bin(item))[2:]) for item in result_data_byte])
