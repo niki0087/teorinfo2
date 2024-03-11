@@ -24,3 +24,4 @@ if __name__ == "__main__":
 
             save_codes_to_json(huffman_codes)
             print("Код Хаффмана сохранен в json файле.")
+            
