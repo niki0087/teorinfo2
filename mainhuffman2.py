@@ -5,8 +5,7 @@ import os
 import json
 from pr5.haffman2 import HuffmanTree, save_codes_to_json, create_text_file, compress_data, decompress_data
 from pr2.information_metrics import calculate_alphabet_power, calculate_hartley_entropy, calculate_shannon_entropy
-from pr5.haffman2 import save_binary_data, load_binary_data
-
+from pr5.haffman2 import save_binary_data
 def display_menu():
     """
 
