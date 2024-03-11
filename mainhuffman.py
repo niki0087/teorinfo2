@@ -1,3 +1,6 @@
+"""
+Docsrting modul.
+"""
 from pr4.haffman import HuffmanTree
 from pr4.haffman import save_codes_to_json
 

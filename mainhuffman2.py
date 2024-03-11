@@ -1,14 +1,18 @@
 """
 Основной модуль программы для кодирования и декодирования Хаффмана.
 """
-from pr5.haffman2 import HuffmanTree, save_codes_to_json, create_text_file, compress_data, decompress_data
-from pr2.information_metrics import calculate_alphabet_power, calculate_hartley_entropy, calculate_shannon_entropy
 import os
 import json
-
+from pr5.haffman2 import HuffmanTree, save_codes_to_json, create_text_file, compress_data, decompress_data
+from pr2.information_metrics import calculate_alphabet_power, calculate_hartley_entropy, calculate_shannon_entropy
+from pr5.haffman2 import save_binary_data, load_binary_data
 
 def display_menu():
+    """
 
+    Returns:
+        _type_: _description_
+    """
 
     
 
@@ -41,17 +45,23 @@ if __name__ == "__main__":
 
             # Сохранение кодов Хаффмана и сжатого текста в JSON файл
             save_data = {
-                #"huffman_tree": huffman_codes,
+                "huffman_tree": huffman_codes,
                 "compressed_text": compressed_text
             }
-
+            
+            save_binary_data(compressed_text, 'result.bin')
             save_codes_to_json(save_data)
             alphabet_power = calculate_alphabet_power(text_content)
             shannon_entropy = calculate_shannon_entropy(text_content, alphabet_power)
             print("Код Хаффмана и сжатый текст сохранены в json файле.")
-            print(f"Мощность алфавита: {alphabet_power}")
+            #print(f"Мощность алфавита: {alphabet_power}")
             print(f"Информационная энтропия (Хартли): {calculate_hartley_entropy(alphabet_power)}")
             print(f"Информационная энтропия (Шеннон): {shannon_entropy}")
+            print("Размер исходного файла:", os.stat("example.txt").st_size)
+            print("Размер закодированного файла:", os.stat("result.bin").st_size)
+            print("Степень сжатия:", ((os.stat("example.txt").st_size)/(os.stat("result.bin").st_size)))
+            #print("Среднее кол-во бит на 1 символ:", (os.stat("code.json").st_size)/)
+            
 
         elif choice == '2':
             file_name = input("Введите имя файла с json: ")
