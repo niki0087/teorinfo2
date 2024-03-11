@@ -1,38 +1,37 @@
 """
 Основной модуль программы для кодирования и декодирования Хаффмана.
 """
-from pr5.haffman2 import HuffmanTree, save_codes_to_json
+from pr5.haffman2 import HuffmanTree, save_codes_to_json, create_text_file, compress_data, decompress_data
+from pr2.information_metrics import calculate_alphabet_power, calculate_hartley_entropy, calculate_shannon_entropy
+import os
+import json
 
-def compress_data(text, huff_codes):
-    """
-    Сжимает текст, используя коды Хаффмана.
 
-    Parameters:
-    - text: Текст, который нужно сжать.
-    - huff_codes: Словарь с кодами Хаффмана для символов.
+def display_menu():
 
-    Returns:
-    - compressed_data: Сжатый текст.
-    """
-    compressed_data = ""
-    for char in text:
-        compressed_data += huff_codes[char]
-    return compressed_data
+
+    
+
+    print("Выберите действие:")
+    print("1. Кодировать текст")
+    print("2. Декодировать текст")
+    print("3. Выйти")
+    choice = input("Введите номер выбранного действия: ")
+    return choice
 
 if __name__ == "__main__":
     while True:
-        file_name = input("Введите имя файла с текстом (или введите 'exit' для завершения): ")
+        choice = display_menu()
 
-        if file_name.lower() == 'exit':
-            print("Программа завершена.")
-            break
+        if choice == '1':
+            file_name = input("Введите имя файла с текстом: ")
+            try:
+                with open(file_name, 'r', encoding='utf-8') as file:
+                    text_content = file.read()
+            except FileNotFoundError:
+                print(f"Файл {file_name} не найден.")
+                continue
 
-        try:
-            with open(file_name, 'r', encoding='utf-8') as file:
-                text_content = file.read()
-        except FileNotFoundError:
-            print(f"Файл {file_name} не найден.")
-        else:
             huffman_tree = HuffmanTree(text_content)
             root_node = huffman_tree.build_tree()
             huffman_codes = huffman_tree.generate_codes(root_node)
@@ -47,5 +46,35 @@ if __name__ == "__main__":
             }
 
             save_codes_to_json(save_data)
+            alphabet_power = calculate_alphabet_power(text_content)
+            shannon_entropy = calculate_shannon_entropy(text_content, alphabet_power)
             print("Код Хаффмана и сжатый текст сохранены в json файле.")
-            
+            print(f"Мощность алфавита: {alphabet_power}")
+            print(f"Информационная энтропия (Хартли): {calculate_hartley_entropy(alphabet_power)}")
+            print(f"Информационная энтропия (Шеннон): {shannon_entropy}")
+
+        elif choice == '2':
+            file_name = input("Введите имя файла с json: ")
+            try:
+                with open(file_name, 'r', encoding='utf-8') as file:
+                    json_content = json.load(file)
+            except FileNotFoundError:
+                print(f"Файл {file_name} не найден.")
+                continue
+
+            compressed_text = json_content.get("compressed_text", "")
+            huffman_codes = json_content.get("huffman_tree", {})
+
+            # Декодирование текста
+            decoded_text = decompress_data(compressed_text, huffman_codes)
+
+            # Создание текстового файла с декодированным текстом
+            create_text_file(decoded_text)
+            print("Декодированный текст сохранен в файле.")
+
+        elif choice == '3':
+            print("Программа завершена.")
+            break
+
+        else:
+            print("Неверный выбор. Пожалуйста, выберите 1, 2 или 3.")

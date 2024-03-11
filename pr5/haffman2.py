@@ -79,6 +79,20 @@ def delete_folders_by_pattern(base_folder, pattern):
     except OSError as e:
         print(f"An error occurred while deleting folders: {e}")
 
+def compress_data(text, huff_codes):
+    """
+    Parameters:
+    - text: Текст, который нужно сжать.
+    - huff_codes: Словарь с кодами Хаффмана для символов.
+
+    Returns:
+    - compressed_data: Сжатый текст.
+    """
+    compressed_data = ""
+    for char in text:
+        compressed_data += huff_codes[char]
+    return compressed_data
+
 def save_codes_to_json(data):
     """
     Save Huffman codes and compressed text to a JSON file.
@@ -99,4 +113,47 @@ def save_codes_to_json(data):
             json.dump(data, json_file, ensure_ascii=False, indent=2)
     except OSError as e:
         print(f"An error occurred while saving data to json: {e}")
-        
+
+def decompress_data(compressed_text, huff_codes):
+    """
+    Args:
+        compressed_text (_type_): _description_
+        huff_codes (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """
+    huff_codes_reversed = {code: symbol for symbol, code in huff_codes.items()}
+    decoded_data = ""
+    temp_code = ""
+
+    for bit in compressed_text:
+        temp_code += bit
+        if temp_code in huff_codes_reversed:
+            decoded_data += huff_codes_reversed[temp_code]
+            temp_code = ""
+
+    return decoded_data
+
+
+def create_text_file(decoded_data):
+    """
+    Create a text file with decoded data in the specified directory.
+
+    Parameters:
+    - decoded_data: The decoded text data.
+
+    """
+    timestamp = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
+    target_folder = "/home/admin/teorinfo2/teorinfo2/pr5"
+    delete_folders_by_pattern(target_folder, r'\d{4}-\d{2}-\d{2}-\d{2}-\d{2}-\d{2}')
+    folder_path = os.path.join(target_folder, timestamp)
+    os.makedirs(folder_path, exist_ok=True)
+
+    file_path = os.path.join(folder_path, "decode.txt")
+    try:
+        with open(file_path, 'w', encoding='utf-8') as file:
+            file.write(decoded_data)
+    except OSError as e:
+        print(f"An error occurred while saving decoded text to file: {e}")
+
