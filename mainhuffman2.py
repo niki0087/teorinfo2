@@ -59,7 +59,7 @@ if __name__ == "__main__":
             print("Размер исходного файла:", os.stat("example.txt").st_size)
             print("Размер закодированного файла:", os.stat("result.bin").st_size)
             print("Степень сжатия:", ((os.stat("example.txt").st_size)/(os.stat("result.bin").st_size)))
-            #print("Среднее кол-во бит на 1 символ:", (os.stat("code.json").st_size)/)
+            #print("Среднее кол-во бит на 1 символ:", (os.stat("result.bin").st_size)/(os.stat("result.bin")))
             
 
         elif choice == '2':

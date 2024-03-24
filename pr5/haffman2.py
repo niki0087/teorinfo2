@@ -112,27 +112,32 @@ def save_codes_to_json(data):
 
     try:
         with open(file_path, 'w', encoding='utf-8') as json_file:
-            json.dump(data, json_file, ensure_ascii=False, indent=2)
+            json.dump(data, json_file, ensure_ascii=False)
     except OSError as e:
         print(f"An error occurred while saving data to json: {e}")
 
-def decompress_data(compressed_text, huff_codes):
+def decompress_data(file_path, huff_codes):
     """
+    Декодирует бинарные данные с использованием Huffman-кодирования.
+
     Args:
-        compressed_text (_type_): _description_
-        huff_codes (_type_): _description_
+        file_path (str): Путь к бинарному файлу для декодирования.
+        huff_codes (dict): Словарь, содержащий коды Хаффмана.
 
     Returns:
-        _type_: _description_
+        str: Раскодированные данные.
     """
-    huff_codes_reversed = {code: symbol for symbol, code in huff_codes.items()}
+    with open(file_path, 'rb') as file:
+        compressed_text = file.read()
+    compressed_bits = ''.join(format(byte, '08b') for byte in compressed_text)
+
     decoded_data = ""
     temp_code = ""
-
-    for bit in compressed_text:
+    
+    for bit in compressed_bits:
         temp_code += bit
-        if temp_code in huff_codes_reversed:
-            decoded_data += huff_codes_reversed[temp_code]
+        if temp_code in huff_codes:
+            decoded_data += huff_codes[temp_code]
             temp_code = ""
 
     return decoded_data
