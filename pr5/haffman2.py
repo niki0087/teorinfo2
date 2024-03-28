@@ -116,29 +116,25 @@ def save_codes_to_json(data):
     except OSError as e:
         print(f"An error occurred while saving data to json: {e}")
 
-def decompress_data(file_path, huff_codes):
+def decompress_data(compressed_data, huff_codes):
     """
     Декодирует бинарные данные с использованием Huffman-кодирования.
 
     Args:
-        file_path (str): Путь к бинарному файлу для декодирования.
+        compressed_data (bytes): Бинарные данные для декодирования.
         huff_codes (dict): Словарь, содержащий коды Хаффмана.
 
     Returns:
         str: Раскодированные данные.
     """
-    with open(file_path, 'rb') as file:
-        compressed_text = file.read()
-    compressed_bits = ''.join(format(byte, '08b') for byte in compressed_text)
-
     decoded_data = ""
-    temp_code = ""
-    
-    for bit in compressed_bits:
-        temp_code += bit
-        if temp_code in huff_codes:
-            decoded_data += huff_codes[temp_code]
-            temp_code = ""
+    current_code = ""
+
+    for bit in compressed_data:
+        current_code += str(bit)
+        if current_code in huff_codes.values():
+            decoded_data += next(symbol for symbol, code in huff_codes.items() if code == current_code)
+            current_code = ""
 
     return decoded_data
 
@@ -177,7 +173,6 @@ def save_binary_data(source_data, file_path):
 
 def load_binary_data(file_path):
     """
-
     Args:
         file_path (_type_): _description_
 
@@ -186,5 +181,5 @@ def load_binary_data(file_path):
     """
     with open(file_path, 'rb') as file:
         result_data_byte = file.read()
-    result_data = ''.join(['{:0>8}'.format(str(bin(item))[2:]) for item in result_data_byte])
+    result_data = ''.join(['{:08b}'.format(byte) for byte in result_data_byte])
     return result_data
