@@ -56,6 +56,7 @@ if __name__ == "__main__":
             print("Размер исходного файла:", os.stat("example.txt").st_size)
             print("Размер закодированного файла:", os.stat("result.bin").st_size)
             print("Степень сжатия:", ((os.stat("example.txt").st_size)/(os.stat("result.bin").st_size)))
+            print("среднее кол-во бит на символ: ", ((len(compressed_text))/(len(text_content))))
 
         elif choice == '2':
             file_path = input("Введите имя файла с зашифрованным текстом: ")
