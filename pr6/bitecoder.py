@@ -11,7 +11,7 @@ def save_binary_data(code, data):
     source_data_byte = bytearray([int(source_data[i * 8:i * 8 + 8], 2) for i in range(int(len(source_data) / 8))])
     return source_data_byte
 
-def encrypt(code, data):
+def load_binary_data(code, data):
     """Encrypt data"""
     #read_data = ''.join(['{:0>8}'.format(str(bin(item))[2:]) for item in data])
     result_data = ''
