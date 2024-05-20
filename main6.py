@@ -1,86 +1,72 @@
+import os
+import logging
+from pr5.haffman2 import HuffmanTree, Node
+from pr6.hemming import Hamming
 
-from configparser import ConfigParser
-from pr6 import haaffman
-from pr6 import bitecoder
-from pr6 import hemming
-from pr6.logger import Logger
+# Проверка наличия файла logfile.log и его создание, если не существует
+if not os.path.exists("logfile.log"):
+    with open("logfile.log", "w") as file:
+        file.write("Log file created.\n")
 
-# Создаем объект класса Logger
-logger = Logger('logfile.log')
+# Настройка логгера
+logging.basicConfig(filename='logfile.log', level=logging.INFO)
 
-# Сохраняем сообщение об ошибке
-logger.error('This is an error message.')
-
-# Сохраняем информационное сообщение
-logger.info('This is an info message.')
-
-def read_settings():
-    """
-    Read settings from settings.ini file.
-    """
-    config = ConfigParser()
-    config.read('settings.ini')
-    return config
-
-def main():
-    """
-    Main function to run the program.
-    """
-    config = read_settings()
-    word_size = config.getint('Settings', 'word_size')
-
+def menu():
+    """Отображает главное меню и обрабатывает выбор пользователя."""
     while True:
-        print("\nРежим работы:\n1) С текстом;\n2) Выход.\n\nВвод: ", end='')
-        try:
-            mode = int(input())
-        except ValueError:
-            print("\nНеверный тип данных.")
-            continue
-
-        if mode == 2:
+        print("1. Кодировать")
+        print("2. Декодировать")
+        print("3. Выход")
+        choice = input("Выберите операцию (1/2/3): ")
+        if choice == '1':
+            data = input("Введите данные для кодирования: ")
+            
+            # Создаем объект HuffmanTree и строим дерево
+            huffman = HuffmanTree(data)
+            tree = huffman.build_tree()
+            
+            # Генерируем коды Хаффмана
+            huff_codes = huffman.generate_codes(tree)
+            
+            # Кодируем данные
+            encoded_huffman = Node.compress_data(data, huff_codes)
+            print("Закодированные данные Хаффмана:", encoded_huffman)
+            
+            # Кодируем данные с помощью кода Хэмминга
+            hamming = Hamming()
+            encoded_hamming = hamming.encode(encoded_huffman)
+            print("Закодированные данные Хэмминга:", encoded_hamming)
+            
+            # Логгирование
+            logging.info("Huffman encoding: {}".format(encoded_huffman))
+            logging.info("Hamming encoding: {}".format(encoded_hamming))
+        elif choice == '2':
+            encoded_data = input("Введите закодированные данные: ")
+            
+            # Декодируем данные с помощью кода Хэмминга
+            hamming = Hamming()
+            decoded_hamming = hamming.decode(encoded_data)
+            print("Декодированные данные Хэмминга:", decoded_hamming)
+            
+            # Создаем объект HuffmanTree и строим дерево
+            huffman = HuffmanTree(decoded_hamming)
+            tree = huffman.build_tree()
+            
+            # Генерируем коды Хаффмана
+            huff_codes = huffman.generate_codes(tree)
+            
+            # Декодируем данные
+            decoded_huffman = Node.decompress_data(decoded_hamming, huff_codes)
+            print("Декодированные данные Хаффмана:", decoded_huffman)
+            
+            # Логгирование
+            logging.info("Hamming decoding: {}".format(decoded_hamming))
+            logging.info("Huffman decoding: {}".format(decoded_huffman))
+        elif choice == '3':
+            print("Выход из программы.")
             break
-
-        print("Введите текст: ", end='')
-        text = input()
-        source_length = len(text)
-
-        # Huffman coding
-        huffman_tree = haaffman.HuffmanTree(text)
-        root = huffman_tree.build_tree()
-        codes = huffman_tree.generate_codes(root)
-        encoded_data_byte = bitecoder.save_binary_data(codes, text)
-
-        # Hemming encoding
-        hemming_instance = hemming.Hemming()
-        encoded_hemming = hemming_instance.encode(encoded_data_byte)
-
-
-        # Displaying encoded data
-        print("\nЗакодированные данные:", encoded_hemming)
-
-        # Adding errors
-        print("\nВведите количество ошибок: ", end='')
-        try:
-            error_count = int(input())
-        except ValueError:
-            print("\nНеверный тип данных.")
-            continue
-
-        encoded_hemming_with_errors = hemming_instance.noise(encoded_hemming, error_count)
-
-        # Decoding Hemming
-        decoded_hemming = hemming_instance.decode(encoded_hemming_with_errors)
-
-        # Decoding Huffman
-        decoded_data = bitecoder.load_binary_data(codes, decoded_hemming)
-
-        # Displaying decoded data
-        print("\nРаскодированный текст:", decoded_data)
-
-        # Logging
-        logger.info(f"Исходная длина текста: {source_length}")
-        logger.info(f"Длина закодированных данных: {len(encoded_hemming)}")
-        logger.info(f"Количество внесенных ошибок: {error_count}")
+        else:
+            print("Неверный выбор операции.")
 
 if __name__ == "__main__":
-    main()
+    menu()

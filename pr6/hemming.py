@@ -1,90 +1,76 @@
-import random
+"""_summary_
 
-class Hemming:
-    """
-    Hemming encoding and decoding class.
+    Returns:
+        _type_: _description_
+"""
+class Hamming:
+    """_summary_
     """
     def encode(self, data):
-        """
-        Encode data using Hemming code.
+        """_summary_
 
         Args:
-            data (str): The input data.
+            data (_type_): _description_
 
         Returns:
-            str: The encoded data.
+            _type_: _description_
         """
+        data = list(data)
         m = len(data)
-        r = 1
-        while 2 ** r <= m + r + 1:
+        r = 0
+        while 2**r < m + r + 1:
             r += 1
 
-        encoded_data = ['0'] * (m + r)
+        hamming_code = ['0'] * (m + r)
 
         j = 0
-        for i in range(1, m + r + 1):
-            if i & (i - 1) != 0:
-                encoded_data[i - 1] = str(data[j])  # Convert to string
+        for i in range(1, len(hamming_code) + 1):
+            if (i & (i - 1)) == 0:
+                hamming_code[i - 1] = '0'
+            else:
+                hamming_code[i - 1] = data[j]
                 j += 1
 
         for i in range(r):
-            parity_pos = 2 ** i - 1
+            x = 2**i
             parity = 0
-            for j in range(parity_pos, m + r, 2 ** (i + 1)):
-                for k in range(parity_pos, min(parity_pos + 2 ** i, m + r), 1):
-                    if k < m + r:
-                        parity ^= int(encoded_data[k])
+            for j in range(x - 1, len(hamming_code), 2 * x):
+                parity ^= sum(int(bit) for bit in hamming_code[j:j + x])
+            hamming_code[x - 1] = str(parity % 2)
 
-            encoded_data[parity_pos] = str(parity)
-
-        return ''.join(encoded_data)
+        return ''.join(hamming_code)
 
     def decode(self, encoded_data):
-        """
-        Decode data using Hemming code.
+        """_summary_
 
         Args:
-            encoded_data (str): The encoded data.
+            encoded_data (_type_): _description_
 
         Returns:
-            str: The decoded data.
+            _type_: _description_
         """
-        r = 1
-        while 2 ** r <= len(encoded_data):
+        encoded_data = list(encoded_data)
+        n = len(encoded_data)
+        r = 0
+        while 2**r < n + 1:
             r += 1
 
-        syndrome = 0
+        error_pos = 0
         for i in range(r):
-            parity_pos = 2 ** i - 1
+            x = 2**i
             parity = 0
-            for _ in range(parity_pos, len(encoded_data), 2 ** (i + 1)):
-                for k in range(parity_pos, min(parity_pos + 2 ** i, len(encoded_data)), 1):
-                    if k < len(encoded_data) and encoded_data[k].isdigit():  # Check if it's a digit
-                        parity ^= int(encoded_data[k])
+            for j in range(x - 1, n, 2 * x):
+                parity ^= sum(int(bit) for bit in encoded_data[j:j + x])
+            if parity % 2 != 0:
+                error_pos += x
 
-            syndrome += parity * (2 ** i)
+        if error_pos:
+            encoded_data[error_pos - 1] = '1' if encoded_data[error_pos - 1] == '0' else '0'
 
-        if syndrome == 0:
-            return encoded_data[:-r]
+        decoded_data = []
+        for i in range(1, n + 1):
+            if (i & (i - 1)) != 0:
+                decoded_data.append(encoded_data[i - 1])
 
-        index = syndrome - 1
-        corrected_encoded_data = list(encoded_data)
-        corrected_encoded_data[index] = str(1 - int(corrected_encoded_data[index]))
-        return ''.join(corrected_encoded_data)
-
-    def noise(self, data, error_count):
-        """
-        Introduce errors into the data.
-
-        Args:
-            data (str): The input data.
-            error_count (int): The number of errors to introduce.
-
-        Returns:
-            str: The data with introduced errors.
-        """
-        indices = random.sample(range(len(data)), error_count)
-        noisy_data = list(data)
-        for index in indices:
-            noisy_data[index] = str(1 - int(noisy_data[index]))
-        return ''.join(noisy_data)
+        return ''.join(decoded_data)
+    

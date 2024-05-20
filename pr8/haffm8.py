@@ -24,47 +24,6 @@ class Node:
         self.left = left
         self.right = right
 
-    @staticmethod
-    def compress_data(text, huff_codes):
-        """
-        Compress data using Huffman coding.
-
-        Args:
-            text (str): The input text to compress.
-            huff_codes (dict): The Huffman codes.
-
-        Returns:
-            str: The compressed data.
-        """
-        compressed_data = ""
-        for char in text:
-            compressed_data += huff_codes[char]
-        return compressed_data
-
-    @staticmethod
-    def decompress_data(compressed_data, huff_codes):
-        """
-        Декодирует бинарные данные с использованием Huffman-кодирования.
-
-        Args:
-            compressed_data (str): Бинарные данные для декодирования.
-            huff_codes (dict): Словарь, содержащий коды Хаффмана.
-
-        Returns:
-            str: Раскодированные данные.
-        """
-        decoded_data = ""
-        current_code = ""
-
-        for bit in compressed_data:
-            current_code += str(bit)
-            if current_code in huff_codes.values():
-                decoded_data += next(symbol for symbol, code in huff_codes.items() if code == current_code)
-                current_code = ""
-
-        return decoded_data
-
-
 class HuffmanTree:
     """
     Class docstring here.
@@ -105,7 +64,6 @@ class HuffmanTree:
         code = self.generate_codes(node.right, path + '1', code)
         return code
 
-
 def delete_folders_by_pattern(base_folder, pattern):
     """
     Delete folders based on the provided pattern.
@@ -122,6 +80,20 @@ def delete_folders_by_pattern(base_folder, pattern):
     except OSError as e:
         print(f"An error occurred while deleting folders: {e}")
 
+def compress_data(text, huff_codes):
+    """
+
+    Args:
+        text (_type_): _description_
+        huff_codes (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """
+    compressed_data = ""
+    for char in text:
+        compressed_data += huff_codes[char]
+    return compressed_data
 
 def save_codes_to_json(data):
     """
@@ -131,7 +103,7 @@ def save_codes_to_json(data):
     - data: The data to be saved, including Huffman codes and compressed text.
     """
     timestamp = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
-    target_folder = "/home/admin/teorinfo2/teorinfo2/pr5"
+    target_folder = "/home/admin/teorinfo2/teorinfo2/pr8"
     delete_folders_by_pattern(target_folder, r'\d{4}-\d{2}-\d{2}-\d{2}-\d{2}-\d{2}')
     folder_path = os.path.join(target_folder, timestamp)
     os.makedirs(folder_path, exist_ok=True)
@@ -144,6 +116,28 @@ def save_codes_to_json(data):
     except OSError as e:
         print(f"An error occurred while saving data to json: {e}")
 
+def decompress_data(compressed_data, huff_codes):
+    """
+    Декодирует бинарные данные с использованием Huffman-кодирования.
+
+    Args:
+        compressed_data (bytes): Бинарные данные для декодирования.
+        huff_codes (dict): Словарь, содержащий коды Хаффмана.
+
+    Returns:
+        str: Раскодированные данные.
+    """
+    decoded_data = ""
+    current_code = ""
+
+    for bit in compressed_data:
+        current_code += str(bit)
+        if current_code in huff_codes.values():
+            decoded_data += next(symbol for symbol, code in huff_codes.items() if code == current_code)
+            current_code = ""
+
+    return decoded_data
+
 
 def create_text_file(decoded_data):
     """
@@ -154,7 +148,7 @@ def create_text_file(decoded_data):
 
     """
     timestamp = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
-    target_folder = "/home/admin/teorinfo2/teorinfo2/pr5"
+    target_folder = "/home/admin/teorinfo2/teorinfo2/pr8"
     delete_folders_by_pattern(target_folder, r'\d{4}-\d{2}-\d{2}-\d{2}-\d{2}-\d{2}')
     folder_path = os.path.join(target_folder, timestamp)
     os.makedirs(folder_path, exist_ok=True)
@@ -166,30 +160,24 @@ def create_text_file(decoded_data):
     except OSError as e:
         print(f"An error occurred while saving decoded text to file: {e}")
 
-
 def save_binary_data(source_data, file_path):
     """
-    Save binary data to a file.
-
     Args:
-        source_data (str): The source data to save.
-        file_path (str): The file path to save the data to.
+        source_data (_type_): _description_
+        file_path (_type_): _description_
     """
     source_data = source_data + '0' * (8 - (len(source_data) % 8))
     source_data_byte = bytearray([int(source_data[i * 8:i * 8 + 8], 2) for i in range(int(len(source_data) / 8))])
     with open(file_path, 'wb') as file:
         file.write(source_data_byte)
 
-
 def load_binary_data(file_path):
     """
-    Load binary data from a file.
-
     Args:
-        file_path (str): The file path to load the data from.
+        file_path (_type_): _description_
 
     Returns:
-        str: The loaded binary data.
+        _type_: _description_
     """
     with open(file_path, 'rb') as file:
         result_data_byte = file.read()

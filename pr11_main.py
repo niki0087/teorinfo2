@@ -11,8 +11,7 @@ def main():
     input_queue = queue.Queue()
     output_queue = queue.Queue()
 
-    encrypt_thread = threading.Thread(target=pr11base.encrypt_decrypt,
-                                      args=(input_queue, output_queue))
+    encrypt_thread = threading.Thread(target=pr11base.encrypt_decrypt, args=(input_queue, output_queue))
     encrypt_thread.daemon = True
     encrypt_thread.start()
 

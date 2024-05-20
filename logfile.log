@@ -1,2 +1,6 @@
-ERROR:2024-04-02 18:47:07,450:This is an error message.
-INFO:2024-04-02 18:47:07,450:This is an info message.
+ERROR:2024-05-06 12:41:38,678:This is an error message.
+INFO:2024-05-06 12:41:38,678:This is an info message.
+INFO:root:Huffman encoding: 0100110100101111
+INFO:root:Hamming encoding: 100110001101001001111
+INFO:root:Hamming decoding: 0100110100101111
+INFO:root:Huffman decoding: 0100110100101111
