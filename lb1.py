@@ -153,14 +153,10 @@ def create_model(model_type: str, input_shape: Tuple[int, int], n_vocab: int) ->
         model.add(tf.keras.layers.Dense(64, activation='relu', kernel_regularizer=l2_reg))
     
     elif model_type == 'bidirectional':
-        model.add(tf.keras.layers.Bidirectional(
-            tf.keras.layers.SimpleRNN(64, activation='tanh', kernel_regularizer=l2_reg, return_sequences=True))
-        )
+        model.add(tf.keras.layers.Bidirectional(tf.keras.layers.SimpleRNN(64, activation='tanh', kernel_regularizer=l2_reg, return_sequences=True)))
         model.add(tf.keras.layers.BatchNormalization())
         model.add(tf.keras.layers.Dropout(0.3))
-        model.add(tf.keras.layers.Bidirectional(
-            tf.keras.layers.SimpleRNN(32, activation='tanh', kernel_regularizer=l2_reg))
-        )
+        model.add(tf.keras.layers.Bidirectional(tf.keras.layers.SimpleRNN(32, activation='tanh', kernel_regularizer=l2_reg)))
         model.add(tf.keras.layers.Dense(64, activation='relu', kernel_regularizer=l2_reg))
     
     model.add(tf.keras.layers.Dropout(0.2))
