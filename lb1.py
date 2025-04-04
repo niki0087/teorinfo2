@@ -136,48 +136,30 @@ def create_model(model_type: str, input_shape: Tuple[int, int], n_vocab: int) ->
     model.add(tf.keras.layers.InputLayer(input_shape=input_shape))
     
     if model_type == 'basic':
-        model.add(tf.keras.layers.SimpleRNN(128,
-                                         activation='tanh',
-                                         kernel_regularizer=l2_reg,
-                                         return_sequences=True))
+        model.add(tf.keras.layers.SimpleRNN(128, activation='tanh', kernel_regularizer=l2_reg, return_sequences=True))
         model.add(tf.keras.layers.BatchNormalization())
         model.add(tf.keras.layers.Dropout(0.3))
-        model.add(tf.keras.layers.SimpleRNN(64,
-                                         activation='tanh',
-                                         kernel_regularizer=l2_reg))
+        model.add(tf.keras.layers.SimpleRNN(64, activation='tanh', kernel_regularizer=l2_reg))
         model.add(tf.keras.layers.Dense(64, activation='relu', kernel_regularizer=l2_reg))
     
     elif model_type == 'deep':
-        model.add(tf.keras.layers.SimpleRNN(128,
-                                          activation='tanh',
-                                          kernel_regularizer=l2_reg,
-                                          return_sequences=True))
+        model.add(tf.keras.layers.SimpleRNN(128, activation='tanh', kernel_regularizer=l2_reg, return_sequences=True))
         model.add(tf.keras.layers.BatchNormalization())
         model.add(tf.keras.layers.Dropout(0.3))
-        model.add(tf.keras.layers.SimpleRNN(64,
-                                          activation='tanh',
-                                          kernel_regularizer=l2_reg,
-                                          return_sequences=True))
+        model.add(tf.keras.layers.SimpleRNN(64, activation='tanh', kernel_regularizer=l2_reg, return_sequences=True))
         model.add(tf.keras.layers.BatchNormalization())
         model.add(tf.keras.layers.Dropout(0.3))
-        model.add(tf.keras.layers.SimpleRNN(32,
-                                          activation='tanh',
-                                          kernel_regularizer=l2_reg))
+        model.add(tf.keras.layers.SimpleRNN(32, activation='tanh', kernel_regularizer=l2_reg))
         model.add(tf.keras.layers.Dense(64, activation='relu', kernel_regularizer=l2_reg))
     
     elif model_type == 'bidirectional':
         model.add(tf.keras.layers.Bidirectional(
-            tf.keras.layers.SimpleRNN(64,
-                                    activation='tanh',
-                                    kernel_regularizer=l2_reg,
-                                    return_sequences=True))
+            tf.keras.layers.SimpleRNN(64, activation='tanh', kernel_regularizer=l2_reg, return_sequences=True))
         )
         model.add(tf.keras.layers.BatchNormalization())
         model.add(tf.keras.layers.Dropout(0.3))
         model.add(tf.keras.layers.Bidirectional(
-            tf.keras.layers.SimpleRNN(32,
-                                    activation='tanh',
-                                    kernel_regularizer=l2_reg))
+            tf.keras.layers.SimpleRNN(32, activation='tanh', kernel_regularizer=l2_reg))
         )
         model.add(tf.keras.layers.Dense(64, activation='relu', kernel_regularizer=l2_reg))
     
@@ -186,11 +168,7 @@ def create_model(model_type: str, input_shape: Tuple[int, int], n_vocab: int) ->
     
     optimizer = tf.keras.optimizers.Adam(learning_rate=0.001)
     
-    model.compile(
-        loss='categorical_crossentropy',
-        optimizer=optimizer,
-        metrics=['accuracy']
-    )
+    model.compile(loss='categorical_crossentropy', optimizer=optimizer, metrics=['accuracy'])
     return model
 
 def train_model(model: tf.keras.Model, X: np.ndarray, y: np.ndarray, model_type: str):
